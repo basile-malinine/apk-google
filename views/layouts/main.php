@@ -42,7 +42,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'options' => ['class' => 'navbar navbar-expand-md navbar-light bg-light fixed-top']
     ]);
 
-    echo '<div class="app-name-container"><div class="app-name-text">STORAGE</div></div>';
+    echo '<div class="app-name-container"><div class="app-name-text">GOOGLE</div></div>';
 
     if (!Yii::$app->user->isGuest) {
         echo $this->render('menu');
