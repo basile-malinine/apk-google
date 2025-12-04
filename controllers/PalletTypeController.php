@@ -15,7 +15,7 @@ class PalletTypeController extends Controller
         $searchModel = new PalletTypeSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        $header = 'Типы паллет';
+        $header = 'Типы паллетов';
 
         return $this->render('list', compact('dataProvider', 'header'));
     }
