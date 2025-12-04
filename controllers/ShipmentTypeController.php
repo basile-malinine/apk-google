@@ -2,14 +2,13 @@
 
 namespace app\controllers;
 
-use yii\db\IntegrityException;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+
 use app\models\ShipmentType\ShipmentType;
 use app\models\ShipmentType\ShipmentTypeSearch;
 
-class ShipmentTypeController extends Controller
+class ShipmentTypeController extends BaseController
 {
     public function behaviors()
     {
@@ -50,16 +49,12 @@ class ShipmentTypeController extends Controller
         $searchModel = new ShipmentTypeSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        $header = 'Типы отгрузки';
-
-        return $this->render('list', compact('dataProvider', 'header'));
+        return $this->render('list', compact('dataProvider'));
     }
 
     public function actionCreate()
     {
         $model = new ShipmentType();
-
-        $header = 'Тип отгрузки (новый)';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -69,13 +64,12 @@ class ShipmentTypeController extends Controller
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', compact(['model', 'header']));
+        return $this->render('create', compact('model'));
     }
 
     public function actionEdit($id)
     {
         $model = $this->findModel($id);
-        $header = 'Тип отгрузки [' . $model->name . ']';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -83,25 +77,10 @@ class ShipmentTypeController extends Controller
             }
         }
 
-        return $this->render('edit', compact('model', 'header'));
+        return $this->render('edit', compact('model'));
     }
 
-    public function actionDelete($id)
-    {
-        $model = $this->findModel($id);
-        $dbMessages = \Yii::$app->params['messages']['db'];
-        try {
-            $model->delete();
-        } catch (IntegrityException $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delIntegrityError']);
-        } catch (\Exception $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delError']);
-        }
-
-        return $this->redirect(['index']);
-    }
-
-    private function findModel($id)
+    protected function findModel($id)
     {
         if (($model = ShipmentType::findOne(['id' => $id])) !== null) {
             return $model;
@@ -109,15 +88,4 @@ class ShipmentTypeController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-    private function postRequestAnalysis($model): bool
-    {
-        if ($model->load($this->request->post())) {
-            if ($model->validate() && $model->save()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

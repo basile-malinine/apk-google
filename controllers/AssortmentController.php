@@ -2,15 +2,14 @@
 
 namespace app\controllers;
 
-use yii\db\IntegrityException;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+
 use app\models\Assortment\Assortment;
 use app\models\Assortment\AssortmentSearch;
 
-class AssortmentController extends Controller
+class AssortmentController extends BaseController
 {
     public function behaviors()
     {
@@ -57,16 +56,12 @@ class AssortmentController extends Controller
         $searchModel = new AssortmentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        $header = 'Номенклатура';
-
-        return $this->render('list', ['dataProvider' => $dataProvider, 'header' => $header]);
+        return $this->render('list', compact('dataProvider'));
     }
 
     public function actionCreate()
     {
         $model = new Assortment();
-
-        $header = 'Номенклатура (новая позиция)';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -76,13 +71,12 @@ class AssortmentController extends Controller
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', compact(['model', 'header']));
+        return $this->render('create', compact('model'));
     }
 
     public function actionEdit($id)
     {
         $model = $this->findModel($id);
-        $header = 'Номенклатура [' . $model->name . ']';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -90,22 +84,7 @@ class AssortmentController extends Controller
             }
         }
 
-        return $this->render('edit', compact('model', 'header'));
-    }
-
-    public function actionDelete($id)
-    {
-        $model = $this->findModel($id);
-        $dbMessages = \Yii::$app->params['messages']['db'];
-        try {
-            $model->delete();
-        } catch (IntegrityException $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delIntegrityError']);
-        } catch (\Exception $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delError']);
-        }
-
-        return $this->redirect(['index']);
+        return $this->render('edit', compact('model'));
     }
 
     // Возвращает название Ед. изм. и Вес по позиции в виде
@@ -121,22 +100,12 @@ class AssortmentController extends Controller
         ];
     }
 
-    private function findModel($id)
+    protected function findModel($id)
     {
         if (($model = Assortment::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    private function postRequestAnalysis($model): bool
-    {
-        if ($model->load($this->request->post())) {
-            if ($model->validate() && $model->save()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

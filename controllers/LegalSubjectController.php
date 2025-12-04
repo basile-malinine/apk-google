@@ -3,14 +3,13 @@
 namespace app\controllers;
 
 use Yii;
-use yii\db\IntegrityException;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+
 use app\models\LegalSubject\LegalSubject;
 use app\models\LegalSubject\LegalSubjectSearch;
 
-class LegalSubjectController extends Controller
+class LegalSubjectController extends BaseController
 {
     public function behaviors()
     {
@@ -57,12 +56,11 @@ class LegalSubjectController extends Controller
         $searchModel = new LegalSubjectSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         $dataProvider->query->andWhere(['is_own' => false]);
-        $header = 'Контрагенты';
 
         $session = yii::$app->session;
         $session->set('legal-subject.list', 'all');
 
-        return $this->render('list', compact(['searchModel', 'dataProvider', 'header']));
+        return $this->render('list', compact(['searchModel', 'dataProvider']));
     }
 
     public function actionSupplier(): string
@@ -70,12 +68,11 @@ class LegalSubjectController extends Controller
         $searchModel = new LegalSubjectSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         $dataProvider->query->andWhere(['is_own' => false, 'is_supplier' => true]);
-        $header = 'Контрагенты';
 
         $session = yii::$app->session;
         $session->set('legal-subject.list', 'supplier');
 
-        return $this->render('list', compact(['searchModel', 'dataProvider', 'header']));
+        return $this->render('list', compact(['searchModel', 'dataProvider']));
     }
 
     public function actionBuyer(): string
@@ -83,19 +80,17 @@ class LegalSubjectController extends Controller
         $searchModel = new LegalSubjectSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         $dataProvider->query->andWhere(['is_own' => false, 'is_buyer' => true]);
-        $header = 'Контрагенты';
 
         $session = yii::$app->session;
         $session->set('legal-subject.list', 'buyer');
 
-        return $this->render('list', compact(['searchModel', 'dataProvider', 'header']));
+        return $this->render('list', compact(['searchModel', 'dataProvider']));
     }
 
     public function actionCreate()
     {
         $model = new LegalSubject();
         $model->is_own = false;
-        $header = 'Контрагент (новый)';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -105,13 +100,12 @@ class LegalSubjectController extends Controller
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', compact('model', 'header'));
+        return $this->render('create', compact('model'));
     }
 
     public function actionEdit($id)
     {
         $model = $this->findModel($id);
-        $header = 'Контрагент [' . $model->name . ']';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -119,22 +113,7 @@ class LegalSubjectController extends Controller
             }
         }
 
-        return $this->render('edit', compact('model', 'header'));
-    }
-
-    public function actionDelete($id)
-    {
-        $model = $this->findModel($id);
-        $dbMessages = \Yii::$app->params['messages']['db'];
-        try {
-            $model->delete();
-        } catch (IntegrityException $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delIntegrityError']);
-        } catch (\Exception $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delError']);
-        }
-
-        return $this->redirect(['index']);
+        return $this->render('edit', compact('model'));
     }
 
     protected function findModel($id)
@@ -144,15 +123,5 @@ class LegalSubjectController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    private function postRequestAnalysis($model): bool
-    {
-        if ($model->load($this->request->post())) {
-            if ($model->validate() && $model->save()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

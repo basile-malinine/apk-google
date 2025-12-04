@@ -100,7 +100,7 @@ echo Nav::widget([
                 ],
 
                 [
-                    'label' => 'Типы приёмки',
+                    'label' => 'Типы приемки',
                     'url' => ['/acceptance-type'],
                 ],
 
@@ -120,7 +120,7 @@ echo Nav::widget([
                 ],
 
                 [
-                    'label' => 'Типы паллетов',
+                    'label' => 'Типы паллет',
                     'url' => ['/pallet-type'],
                 ],
 

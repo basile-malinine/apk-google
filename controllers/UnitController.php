@@ -2,14 +2,13 @@
 
 namespace app\controllers;
 
-use yii\db\IntegrityException;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+
 use app\models\Unit\Unit;
 use app\models\Unit\UnitSearch;
 
-class UnitController extends Controller
+class UnitController extends BaseController
 {
     public function behaviors()
     {
@@ -50,16 +49,12 @@ class UnitController extends Controller
         $searchModel = new UnitSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        $header = 'Единицы измерения';
-
-        return $this->render('list', ['dataProvider' => $dataProvider, 'header' => $header]);
+        return $this->render('list', compact('dataProvider'));
     }
 
     public function actionCreate()
     {
         $model = new Unit();
-
-        $header = 'Единица измерения (новая)';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -69,13 +64,12 @@ class UnitController extends Controller
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', compact(['model', 'header']));
+        return $this->render('create', compact('model'));
     }
 
     public function actionEdit($id)
     {
         $model = $this->findModel($id);
-        $header = 'Единица измерения [' . $model->name . ']';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -83,40 +77,15 @@ class UnitController extends Controller
             }
         }
 
-        return $this->render('edit', compact('model', 'header'));
+        return $this->render('edit', compact('model'));
     }
 
-    public function actionDelete($id)
-    {
-        $model = $this->findModel($id);
-        $dbMessages = \Yii::$app->params['messages']['db'];
-        try {
-            $model->delete();
-        } catch (IntegrityException $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delIntegrityError']);
-        } catch (\Exception $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delError']);
-        }
-
-        return $this->redirect(['index']);
-    }
-
-    private function findModel($id)
+    protected function findModel($id)
     {
         if (($model = Unit::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    private function postRequestAnalysis($model): bool
-    {
-        if ($model->load($this->request->post())) {
-            if ($model->validate() && $model->save()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

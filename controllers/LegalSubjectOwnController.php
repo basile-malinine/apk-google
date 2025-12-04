@@ -2,14 +2,13 @@
 
 namespace app\controllers;
 
-use yii\db\IntegrityException;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+
 use app\models\LegalSubject\LegalSubject;
 use app\models\LegalSubject\LegalSubjectSearch;
 
-class LegalSubjectOwnController extends Controller
+class LegalSubjectOwnController extends BaseController
 {
     public function behaviors()
     {
@@ -50,16 +49,14 @@ class LegalSubjectOwnController extends Controller
         $searchModel = new LegalSubjectSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         $dataProvider->query->andWhere(['is_own' => true]);
-        $header = 'Собственные предприятия';
 
-        return $this->render('list', compact(['searchModel', 'dataProvider', 'header']));
+        return $this->render('list', compact(['searchModel', 'dataProvider']));
     }
 
     public function actionCreate()
     {
         $model = new LegalSubject();
         $model->is_own = true;
-        $header = 'Собственное предприятие (новое)';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -69,13 +66,12 @@ class LegalSubjectOwnController extends Controller
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', compact('model', 'header'));
+        return $this->render('create', compact('model'));
     }
 
     public function actionEdit($id)
     {
         $model = $this->findModel($id);
-        $header = 'Собственное предприятие [' . $model->name . ']';
 
         if ($this->request->isPost) {
             if ($this->postRequestAnalysis($model)) {
@@ -83,22 +79,7 @@ class LegalSubjectOwnController extends Controller
             }
         }
 
-        return $this->render('edit', compact('model', 'header'));
-    }
-
-    public function actionDelete($id)
-    {
-        $model = $this->findModel($id);
-        $dbMessages = \Yii::$app->params['messages']['db'];
-        try {
-            $model->delete();
-        } catch (IntegrityException $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delIntegrityError']);
-        } catch (\Exception $e) {
-            \Yii::$app->session->setFlash('error', $dbMessages['delError']);
-        }
-
-        return $this->redirect(['index']);
+        return $this->render('edit', compact('model'));
     }
 
     protected function findModel($id)
@@ -108,15 +89,5 @@ class LegalSubjectOwnController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    private function postRequestAnalysis($model): bool
-    {
-        if ($model->load($this->request->post())) {
-            if ($model->validate() && $model->save()) {
-                return true;
-            }
-        }
-        return false;
     }
 }
