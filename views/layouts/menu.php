@@ -1,9 +1,11 @@
 <?php
 
 use yii\bootstrap5\Nav;
+use kartik\bs5dropdown\Dropdown;
 
 echo Nav::widget([
-    'options' => ['class' => 'navbar-nav'],
+    'dropdownClass' => Dropdown::class,
+    'options' => ['class' => 'navbar-nav mr-auto me-auto'],
     'encodeLabels' => false,
 
     'items' => [
@@ -21,6 +23,11 @@ echo Nav::widget([
                     'url' => ['/unit'],
                 ],
 
+                [
+                    'label' => 'Таблицы Google',
+                    'url' => ['/google-sheet'],
+                ],
+
                 '<hr class="dropdown-divider">',
 
                 [
@@ -34,7 +41,7 @@ echo Nav::widget([
                 ],
 
                 [
-                    'label' => 'Склады',
+                    'label' => 'Склады +G',
                     'url' => ['/stock'],
                 ],
 
@@ -72,6 +79,41 @@ echo Nav::widget([
                     'url' => ['/shipment-type'],
                 ],
 
+                [
+                    'label' => 'Типы рейсов +G',
+                    'url' => ['/flight-type'],
+                ],
+
+                [
+                    'label' => 'Ворота / Рампы +G',
+                    'url' => ['/gate-type'],
+                ],
+
+                [
+                    'label' => 'Типы паллет',
+                    'url' => ['/pallet-type'],
+                ],
+
+                [
+                    'label' => 'Смена',
+                    'url' => ['/workshift'],
+                ],
+
+                [
+                    'label' => 'Температурные режимы',
+                    'url' => ['/temperature-regime'],
+                ],
+
+                [
+                    'label' => 'Марки автомобилей',
+                    'url' => ['/car-brand'],
+                ],
+
+                [
+                    'label' => 'Типы кузова',
+                    'url' => ['/car-body'],
+                ],
+
                 '<hr class="dropdown-divider">',
 
                 [
@@ -82,6 +124,37 @@ echo Nav::widget([
                 [
                     'label' => 'Исполнители',
                     'url' => ['/contractor'],
+                ],
+            ],
+        ],
+
+        [
+            'label' => 'Статусы',
+            'options' => ['class' => 'ms-4'],
+            'items' => [
+                [
+                    'label' => 'Водитель +G',
+                    'url' => ['/driver-status'],
+                ],
+
+                [
+                    'label' => 'Местоположение +G',
+                    'url' => ['/location-status'],
+                ],
+
+                [
+                    'label' => 'Стикер +G',
+                    'url' => ['/sticker-status'],
+                ],
+
+                [
+                    'label' => 'Заказ +G',
+                    'url' => ['/order-status'],
+                ],
+
+                [
+                    'label' => 'Приёмка +G',
+                    'url' => ['/acceptance-status'],
                 ],
             ],
         ],

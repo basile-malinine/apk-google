@@ -119,6 +119,45 @@ $config = [
 
                 // EmployeeController Сотрудники
                 'employee/<action:(edit|delete)>/<id:\d+>' => 'employee/<action>',
+
+                // FlightTypeController Тип рейса
+                'flight-type/<action:(edit|delete)>/<id:\d+>' => 'flight-type/<action>',
+
+                // GateTypeController Ворота / Рампы
+                'gate-type/<action:(edit|delete)>/<id:\d+>' => 'gate-type/<action>',
+
+                // PalletTypeController Типы паллет
+                'pallet-type/<action:(edit|delete)>/<id:\d+>' => 'pallet-type/<action>',
+
+                // WorkshiftController Смена
+                'workshift/<action:(edit|delete)>/<id:\d+>' => 'workshift/<action>',
+
+                // TemperatureRegimeController Температурные режимы
+                'temperature-regime/<action:(edit|delete)>/<id:\d+>' => 'temperature-regime/<action>',
+
+                // CarBrandController Марки автомобилей
+                'car-brand/<action:(edit|delete)>/<id:\d+>' => 'car-brand/<action>',
+
+                // CarBodyController Типы кузова
+                'car-body/<action:(edit|delete)>/<id:\d+>' => 'car-body/<action>',
+
+                // DriverStatusController Статус Водитель
+                'driver-status/<action:(edit|delete)>/<id:\d+>' => 'driver-status/<action>',
+
+                // LocationStatusController Статус Местоположение
+                'location-status/<action:(edit|delete)>/<id:\d+>' => 'location-status/<action>',
+
+                // StickerStatusController Статус Стикер
+                'sticker-status/<action:(edit|delete)>/<id:\d+>' => 'sticker-status/<action>',
+
+                // OrderStatusController Статус Заказ
+                'order-status/<action:(edit|delete)>/<id:\d+>' => 'order-status/<action>',
+
+                // AcceptanceStatusController Статус Приёмка
+                'acceptance-status/<action:(edit|delete)>/<id:\d+>' => 'acceptance-status/<action>',
+
+                // GoogleSheetController Таблицы Google
+                'google-sheet/<action:(edit|delete)>/<id:\d+>' => 'google-sheet/<action>',
             ],
         ],
     ],

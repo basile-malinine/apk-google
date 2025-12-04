@@ -3,7 +3,7 @@
 namespace app\models\Stock;
 
 use yii\db\ActiveRecord;
-use app\models\OrderSupplier\OrderSupplier;
+use app\models\UpdateGoogle;
 
 /**
  * This is the model class for table "stock".
@@ -43,6 +43,27 @@ class Stock extends ActiveRecord
         ];
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        $this->updateGoogle();
+    }
+
+    public function afterDelete()
+    {
+        $this->updateGoogle();
+    }
+
+    private function updateGoogle(): void
+    {
+        $ug = new UpdateGoogle('DB!C4:C', $this->getListForGoogle());
+
+        // Для таблицы Test Table Security
+        $ug->update('1cr8nsLo9dq-f1n2Tw7rG2sqnS-TtyXoF-G9qfwPRZ4M');
+
+        // Для таблицы Старший смены
+        $ug->update('1wzmRAhmt_PQufvNIzAsOvUnHfGCtzLuyx5UuncwdeNc');
+    }
+
     // Список Складов
     public static function getList(): array
     {
@@ -51,5 +72,10 @@ class Stock extends ActiveRecord
             ->indexBy('id')
             ->orderBy(['name' => SORT_ASC])
             ->column();
+    }
+
+    private function getListForGoogle(): array
+    {
+        return array_values(self::getList());
     }
 }

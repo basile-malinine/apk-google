@@ -6,6 +6,7 @@ use yii\db\IntegrityException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use app\models\Country\Country;
 use app\models\Country\CountrySearch;
 
@@ -39,6 +40,12 @@ class CountryController extends Controller
                         'allow' => true,
                         'actions' => ['delete'],
                         'roles' => ['country.delete'],
+                    ],
+
+                    [
+                        'allow' => true,
+                        'actions' => ['get-inn-name', 'get-alfa2'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],
@@ -116,5 +123,24 @@ class CountryController extends Controller
             }
         }
         return false;
+    }
+
+    public function actionGetInnName()
+    {
+        $id = \Yii::$app->request->post('id');
+        $isLegal = \Yii::$app->request->post('isLegal');
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $model = $this->findModel($id);
+
+        return $isLegal ? $model->inn_legal_name : $model->inn_name;
+    }
+
+    public function actionGetAlfa2()
+    {
+        $id = \Yii::$app->request->post('id');
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $model = $this->findModel($id);
+
+        return $model->alfa2;
     }
 }
